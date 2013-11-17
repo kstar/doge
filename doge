@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Copyright (c) 2013 Akarsh Simha <akarsh.simha@kdemail.net>
+# Released under the GNU General Public License v2 or later
+# See the README.md and LICENSE files for details
+
+while true; do
+
+xwd -out /tmp/doge.png -silent -root
+convert /tmp/doge.png /tmp/doge.pnm
+echo "" > /tmp/doge.txt
+
+for i in `gocr /tmp/doge.pnm`; do echo $i | aspell clean 2> /dev/null >> /tmp/doge.txt; done;
+
+cat /tmp/doge.txt | sed -e 's/and//gI' -e 's/for//gI' -e 's/the//gI' -e 's/of//gI'  -e 's/and//gI'  -e 's/a//gI'  -e 's/to//gI'  -e 's/in//gI'  -e 's/is//gI'  -e 's/you//gI'  -e 's/that//gI'  -e 's/it//gI'  -e 's/he//gI'  -e 's/was//gI'  -e 's/for//gI'  -e 's/on//gI'  -e 's/are//gI'  -e 's/as//gI'  -e 's/with//gI'  -e 's/his//gI'  -e 's/they//gI'  -e 's/I//gI'  -e 's/at//gI'  -e 's/be//gI'  -e 's/this//gI'  -e 's/have//gI'  -e 's/from//gI'  -e 's/or//gI'  -e 's/one//gI'  -e 's/had//gI'  -e 's/by//gI'  -e 's/word//gI'  -e 's/but//gI'  -e 's/not//gI'  -e 's/what//gI'  -e 's/all//gI'  -e 's/were//gI'  -e 's/we//gI'  -e 's/when//gI'  -e 's/your//gI'  -e 's/can//gI'  -e 's/said//gI'  -e 's/there//gI'  -e 's/use//gI'  -e 's/an//gI'  -e 's/each//gI'  -e 's/which//gI'  -e 's/she//gI'  -e 's/do//gI'  -e 's/how//gI'  -e 's/their//gI'  -e 's/if//gI'  -e 's/will//gI'  -e 's/up//gI'  -e 's/other//gI'  -e 's/about//gI'  -e 's/out//gI'  -e 's/many//gI'  -e 's/then//gI'  -e 's/them//gI'  -e 's/these//gI'  -e 's/so//gI'  -e 's/some//gI'  -e 's/her//gI'  -e 's/would//gI'  -e 's/make//gI'  -e 's/like//gI'  -e 's/him//gI'  -e 's/into//gI'  -e 's/time//gI'  -e 's/has//gI'  -e 's/look//gI'  -e 's/two//gI'  -e 's/more//gI'  -e 's/write//gI'  -e 's/go//gI'  -e 's/see//gI'  -e 's/number//gI'  -e 's/no//gI'  -e 's/way//gI'  -e 's/could//gI'  -e 's/people//gI'  -e 's/my//gI'  -e 's/than//gI'  -e 's/first//gI'  -e 's/water//gI'  -e 's/been//gI'  -e 's/call//gI'  -e 's/who//gI'  -e 's/its//gI'  -e 's/now//gI'  -e 's/find//gI'  -e 's/long//gI'  -e 's/down//gI'  -e 's/day//gI'  -e 's/did//gI'  -e 's/get//gI'  -e 's/come//gI'  -e 's/made//gI'  -e 's/may//gI' > /tmp/doge-sanitized.txt
+
+doge_array=( 'such' 'good' 'do want' 'wow' 'amaze' 'so' 'wow so' 'nice' 'much' )
+colors=( 'yellow' 'red' 'green' 'magenta' 'white' 'orange' )
+vertalign=( 'top' 'middle' 'bottom' )
+horizalign=( 'left' 'right' 'center' )
+
+for word in `cat /tmp/doge-sanitized.txt`; do
+   if [ ${#word} -ge 5 ]; then
+       number=$RANDOM
+       let "number %= 50";
+       if [ ${number} -ge 40 ]; then
+	   index=$RANDOM
+	   let "index %= 9";
+	   colorindex=$RANDOM
+	   let "colorindex %= 6";
+	   vertalignindex=$RANDOM
+	   let "vertalignindex %= 3";
+	   horizalignindex=$RANDOM
+	   let "horizalignindex %= 3";
+	   offset=$RANDOM
+	   let "offset %= 300";
+
+	   # Try to spell-check
+	   correctedword=$(echo "${word}" | aspell -a | grep "${word}" | sed 's/^.*: \([^,]*\),.*$/\1/')
+
+	   misspelledword=$(misspell ${correctedword})
+	   number_=$RANDOM
+	   let "number_ %= 100"
+	   if [ ${number_} -ge 95 ]; then
+	       misspelledword=${word} # use the source word occasionally.
+	   fi;
+	   
+	   # Generate a whitespace string of random length
+	   stringlength=$RANDOM
+	   whitespacestring1=""
+	   let "stringlength %= 80";
+	   for k in `seq 1 ${stringlength}`; do
+	       whitespacestring1="${whitespacestring1} ";
+	   done;
+
+	   stringlength=$RANDOM
+	   whitespacestring2=""
+	   let "stringlength %= 80";
+	   for k in `seq 1 ${stringlength}`; do
+	       whitespacestring2="${whitespacestring2} ";
+	   done;
+
+	   number_=$RANDOM
+	   let "number_ %= 50"
+	   if [ ${number_} -ge 45 ]; then # Occasionally, throw in just 'wow'
+	       misspelledword="";
+	       index=3;
+	   fi;
+	   echo "${whitespacestring1}${doge_array[$index]} ${misspelledword}${whitespacestring2}" | osd_cat --pos=${vertalign[$vertalignindex]} --align=${horizalign[$horizalignindex]} --colour=${colors[$colorindex]} -o $offset -f "-b&h-lucida-bold-r-normal-sans-20-140-100-100-p-127-iso8859-1" &
+	   
+	   # Random sleep interval
+	   number_=$RANDOM
+	   let "number_ %= 50"
+	   sleeptime=`echo ${number_} / 20.0 | bc`
+	   sleep ${sleeptime}
+       fi;
+   fi;
+done;
+
+number_=$RANDOM
+let "number_ %= 50"
+sleeptime=`echo ${number_} / 13.0 | bc`
+
+sleep ${sleeptime}
+
+done;
