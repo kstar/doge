@@ -3,6 +3,9 @@ doge
 
 Generates a dynamic doge monologue from the contents of your screen
 
+For more information on doge, please see:
+http://knowyourmeme.com/memes/doge
+
 Dependencies:
 =============
 
@@ -56,6 +59,9 @@ Contribute:
 
 If someone can figure out instructions to get Comic Sans MS working,
 please let me know.
+
+If someone cares enough to clean up my really ugly code, please go
+ahead and contribute back.
 
 Copyright:
 ==========
